@@ -84,8 +84,8 @@ class Checkout extends Component
         // Clear cart
         $this->cartService->clearCart();
 
-        // Redirect to confirmation page
-        return redirect()->route('order.confirmation', ['order' => $order->order_number]);
+        // Redirect to payment initiation
+        return redirect()->route('payment.initiate', ['orderId' => $order->order_number]);
     }
 
     public function render()
