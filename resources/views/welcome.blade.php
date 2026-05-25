@@ -47,8 +47,8 @@
             <!-- Hero Section -->
             <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 class="text-4xl font-bold mb-4">Bienvenue sur TechStore</h2>
-                    <p class="text-xl mb-8">Le meilleur matériel informatique au meilleur prix</p>
+                    <h2 class="text-4xl font-bold mb-4 text-white">Bienvenue sur TechStore</h2>
+                    <p class="text-xl mb-8 text-white">Le meilleur matériel informatique au meilleur prix</p>
                 </div>
             </section>
 
@@ -64,8 +64,8 @@
 
                     @forelse($products as $product)
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover-lift animate-fade-in">
-                            <div class="h-48 bg-gray-200 flex items-center justify-center">
-                                @if($product->image_path)
+                            <div class="h-48 bg-gray-100 flex items-center justify-center">
+                                @if($product->image_path && !empty($product->image_path))
                                     <img src="{{ asset($product->image_path) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
                                 @else
                                     <div class="text-gray-400 text-6xl">📦</div>
@@ -116,11 +116,11 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                         <div>
-                            <h3 class="text-lg font-bold mb-4">TechStore</h3>
+                            <h3 class="text-lg font-bold mb-4 text-white">TechStore</h3>
                             <p class="text-gray-400 text-sm">Votre boutique informatique de confiance en Côte d'Ivoire. Produits de qualité, service professionnel.</p>
                         </div>
                         <div>
-                            <h4 class="text-md font-semibold mb-4">Liens rapides</h4>
+                            <h4 class="text-md font-semibold mb-4 text-white">Liens rapides</h4>
                             <ul class="space-y-2 text-gray-400 text-sm">
                                 <li><a href="/" class="hover:text-white transition-colors">Accueil</a></li>
                                 <li><a href="/cart" class="hover:text-white transition-colors">Panier</a></li>
@@ -130,7 +130,7 @@
                             </ul>
                         </div>
                         <div>
-                            <h4 class="text-md font-semibold mb-4">Service client</h4>
+                            <h4 class="text-md font-semibold mb-4 text-white">Service client</h4>
                             <ul class="space-y-2 text-gray-400 text-sm">
                                 <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
                                 <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
@@ -139,7 +139,7 @@
                             </ul>
                         </div>
                         <div>
-                            <h4 class="text-md font-semibold mb-4">Contact</h4>
+                            <h4 class="text-md font-semibold mb-4 text-white">Contact</h4>
                             <ul class="space-y-2 text-gray-400 text-sm">
                                 <li>📍 Abidjan, Côte d'Ivoire</li>
                                 <li>📞 +225 XX XX XX XX XX</li>
