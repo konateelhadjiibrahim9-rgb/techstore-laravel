@@ -28,6 +28,6 @@ class OrderHistory extends Component
 
         return view('livewire.order-history', [
             'orders' => $orders,
-        ]);
+        ])->layout('layouts.app');
     }
 }
