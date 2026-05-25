@@ -58,6 +58,6 @@ class ShoppingCart extends Component
             'cartItems' => $cartItems,
             'total' => $total,
             'totalItems' => $totalItems,
-        ]);
+        ])->layout('layouts.app');
     }
 }
