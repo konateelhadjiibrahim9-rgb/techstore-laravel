@@ -4,10 +4,14 @@ namespace App\Livewire;
 
 use App\Services\CartService;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ShoppingCart extends Component
 {
+    use WithPagination;
+
     protected $cartService;
+    public $loading = false;
 
     public function boot()
     {
@@ -16,6 +20,7 @@ class ShoppingCart extends Component
 
     public function updateQuantity($productId, $quantity)
     {
+        $this->loading = true;
         $result = $this->cartService->updateQuantity($productId, $quantity);
         
         if ($result['success']) {
@@ -23,18 +28,24 @@ class ShoppingCart extends Component
         } else {
             $this->dispatch('showToast', message: $result['message'], type: 'error');
         }
+        
+        $this->loading = false;
     }
 
     public function removeProduct($productId)
     {
+        $this->loading = true;
         $this->cartService->removeProduct($productId);
         $this->dispatch('cartUpdated');
+        $this->loading = false;
     }
 
     public function clearCart()
     {
+        $this->loading = true;
         $this->cartService->clearCart();
         $this->dispatch('cartUpdated');
+        $this->loading = false;
     }
 
     public function render()
