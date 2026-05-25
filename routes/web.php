@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
+use App\Livewire\Admin\OrderList;
 use App\Livewire\ShoppingCart;
 use App\Livewire\Checkout;
 use App\Livewire\OrderHistory;
@@ -58,6 +59,8 @@ Route::prefix('admin')
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
         Route::get('/products/{product}/edit', ProductForm::class)->name('products.edit');
+        
+        Route::get('/orders', OrderList::class)->name('orders.index');
     });
 
 require __DIR__.'/auth.php';
