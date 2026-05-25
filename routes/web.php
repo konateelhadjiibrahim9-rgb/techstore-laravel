@@ -47,6 +47,9 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+// Admin redirect
+Route::redirect('/admin', '/admin/dashboard');
+
 // Admin routes
 Route::prefix('admin')
     ->middleware(['auth'])
