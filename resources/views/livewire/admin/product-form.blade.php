@@ -88,14 +88,20 @@
                 </div>
 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Chemin de l'image</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Image du produit</label>
+                    @if($image_path)
+                        <div class="mb-3">
+                            <img src="{{ asset($image_path) }}" alt="Image actuelle" class="h-32 w-32 object-cover rounded">
+                        </div>
+                    @endif
                     <input 
-                        type="text" 
-                        wire:model="image_path" 
+                        type="file" 
+                        wire:model="image" 
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="ex: images/produit.jpg"
+                        accept="image/jpeg,image/png,image/webp"
                     >
-                    @error('image_path') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    <p class="text-sm text-gray-500 mt-1">Formats acceptés : JPEG, PNG, WebP (max 2Mo)</p>
+                    @error('image') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="md:col-span-2">

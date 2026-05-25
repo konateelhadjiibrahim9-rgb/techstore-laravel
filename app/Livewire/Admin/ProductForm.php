@@ -5,9 +5,12 @@ namespace App\Livewire\Admin;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ProductForm extends Component
 {
+    use WithFileUploads;
+
     public $product;
     public $name;
     public $brand;
@@ -17,6 +20,7 @@ class ProductForm extends Component
     public $stock_quantity;
     public $image_path;
     public $category_id;
+    public $image;
 
     public function mount($product = null)
     {
@@ -44,7 +48,7 @@ class ProductForm extends Component
         'price' => 'required|numeric|min:0',
         'stock_quantity' => 'required|integer|min:0',
         'category_id' => 'required|exists:categories,id',
-        'image_path' => 'nullable|string',
+        'image' => 'nullable|image|max:2048|mimes:jpeg,png,webp',
     ];
 
     public function save()
@@ -55,6 +59,15 @@ class ProductForm extends Component
 
         $this->validate();
 
+        // Handle image upload
+        if ($this->image) {
+            $imageName = time() . '.' . $this->image->getClientOriginalExtension();
+            $this->image->storeAs('products', $imageName, 'public');
+            $imagePath = 'storage/products/' . $imageName;
+        } else {
+            $imagePath = $this->image_path;
+        }
+
         $productData = [
             'name' => $this->name,
             'brand' => $this->brand,
@@ -63,7 +76,7 @@ class ProductForm extends Component
             'price' => $this->price,
             'stock_quantity' => $this->stock_quantity,
             'category_id' => $this->category_id,
-            'image_path' => $this->image_path,
+            'image_path' => $imagePath,
         ];
 
         if ($this->product) {

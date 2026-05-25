@@ -5,6 +5,7 @@ use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\ShoppingCart;
 use App\Livewire\Checkout;
+use App\Livewire\OrderHistory;
 use App\Http\Controllers\PaymentController;
 
 Route::view('/', 'welcome');
@@ -36,6 +37,10 @@ Route::get('/payment/status/{orderId}', [PaymentController::class, 'checkPayment
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::get('/my-orders', OrderHistory::class)
+    ->middleware(['auth'])
+    ->name('my-orders');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
