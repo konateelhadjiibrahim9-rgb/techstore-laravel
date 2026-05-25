@@ -64,6 +64,21 @@ Route::prefix('admin')
         Route::get('/products/{product}/edit', ProductForm::class)->name('products.edit');
         
         Route::get('/orders', OrderList::class)->name('orders.index');
+        
+        // Admin management (super admin only)
+        Route::get('/admins', function () {
+            $users = \App\Models\User::where('role', '!=', 'user')->get();
+            return view('admin.admins', ['users' => $users]);
+        })->middleware('is.super.admin')->name('admins.index');
+        
+        Route::post('/admins/{user}/role', function (\Illuminate\Http\Request $request, $userId) {
+            $user = \App\Models\User::find($userId);
+            if ($user && $user->id !== auth()->id()) {
+                $user->role = $request->role;
+                $user->save();
+            }
+            return redirect()->route('admin.admins.index');
+        })->middleware('is.super.admin')->name('admins.update.role');
     });
 
 require __DIR__.'/auth.php';
