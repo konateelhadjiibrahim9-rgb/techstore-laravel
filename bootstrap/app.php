@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'is.super.admin' => \App\Http\Middleware\IsSuperAdmin::class,
         ]);
+        
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

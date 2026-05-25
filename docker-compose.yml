@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: techstore-backend
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=techstore
+      - DB_USERNAME=techstore_user
+      - DB_PASSWORD=techstore_password
+    depends_on:
+      - db
+    networks:
+      - techstore-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: techstore-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "8001:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=techstore_frontend.settings
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - techstore-network
+
+  db:
+    image: mysql:8.0
+    container_name: techstore-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=techstore
+      - MYSQL_USER=techstore_user
+      - MYSQL_PASSWORD=techstore_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - techstore-network
+
+volumes:
+  db_data:
+
+networks:
+  techstore-network:
+    driver: bridge
