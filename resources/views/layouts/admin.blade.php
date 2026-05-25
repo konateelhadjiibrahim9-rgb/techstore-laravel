@@ -62,7 +62,7 @@
                         <h2 class="text-xl font-semibold text-gray-800">{{ $title ?? 'Administration' }}</h2>
                         <div class="flex items-center space-x-4">
                             <span class="text-gray-600">{{ auth()->user()->name }}</span>
-                            <form method="POST" action="{{ route('logout') }}" translate="no">
+                            <form method="POST" action="/logout">
                                 @csrf
                                 <button type="submit" class="text-red-600 hover:text-red-800">
                                     Déconnexion
