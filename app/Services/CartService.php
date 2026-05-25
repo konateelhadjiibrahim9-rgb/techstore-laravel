@@ -20,7 +20,18 @@ class CartService
         $product = Product::find($productId);
 
         if (!$product) {
-            return false;
+            return ['success' => false, 'message' => 'Produit introuvable.'];
+        }
+
+        // Check if product has enough stock
+        $currentQuantity = isset($cart[$productId]) ? $cart[$productId]['quantity'] : 0;
+        $totalRequested = $currentQuantity + $quantity;
+
+        if ($totalRequested > $product->stock_quantity) {
+            return [
+                'success' => false,
+                'message' => "Stock insuffisant. Il ne reste que {$product->stock_quantity} unité(s) disponible(s)."
+            ];
         }
 
         if (isset($cart[$productId])) {
@@ -37,7 +48,7 @@ class CartService
         }
 
         Session::put($this->cartKey, $cart);
-        return true;
+        return ['success' => true, 'message' => 'Produit ajouté au panier.'];
     }
 
     public function updateQuantity($productId, $quantity)
@@ -48,10 +59,20 @@ class CartService
             if ($quantity <= 0) {
                 unset($cart[$productId]);
             } else {
+                // Check if product has enough stock
+                $product = Product::find($productId);
+                if ($product && $quantity > $product->stock_quantity) {
+                    return [
+                        'success' => false,
+                        'message' => "Stock insuffisant. Il ne reste que {$product->stock_quantity} unité(s) disponible(s)."
+                    ];
+                }
                 $cart[$productId]['quantity'] = $quantity;
             }
             Session::put($this->cartKey, $cart);
+            return ['success' => true, 'message' => 'Quantité mise à jour.'];
         }
+        return ['success' => false, 'message' => 'Produit non trouvé dans le panier.'];
     }
 
     public function removeProduct($productId)

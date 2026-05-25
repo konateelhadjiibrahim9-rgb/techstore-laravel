@@ -45,7 +45,7 @@
             </div>
             <div class="ml-4">
                 <p class="text-sm text-gray-500">Valeur Stock</p>
-                <p class="text-2xl font-bold text-gray-900">{{ number_format(\App\Models\Product::sum('price') * \App\Models\Product::sum('stock_quantity'), 2, ',', ' ') }} €</p>
+                <p class="text-2xl font-bold text-gray-900">{{ number_format(\App\Models\Product::get()->sum(function($product) { return $product->price * $product->stock_quantity; }), 2, ',', ' ') }} €</p>
             </div>
         </div>
     </div>

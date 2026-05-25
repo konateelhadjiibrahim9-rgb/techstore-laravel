@@ -16,8 +16,13 @@ class ShoppingCart extends Component
 
     public function updateQuantity($productId, $quantity)
     {
-        $this->cartService->updateQuantity($productId, $quantity);
-        $this->dispatch('cartUpdated');
+        $result = $this->cartService->updateQuantity($productId, $quantity);
+        
+        if ($result['success']) {
+            $this->dispatch('cartUpdated');
+        } else {
+            $this->dispatch('showToast', message: $result['message'], type: 'error');
+        }
     }
 
     public function removeProduct($productId)

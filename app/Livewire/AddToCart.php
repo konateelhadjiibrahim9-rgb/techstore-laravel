@@ -20,10 +20,14 @@ class AddToCart extends Component
 
     public function addToCart()
     {
-        $this->cartService->addProduct($this->productId, $this->quantity);
+        $result = $this->cartService->addProduct($this->productId, $this->quantity);
         
-        $this->dispatch('cartUpdated');
-        $this->dispatch('showToast', message: 'Produit ajouté au panier !');
+        if ($result['success']) {
+            $this->dispatch('cartUpdated');
+            $this->dispatch('showToast', message: $result['message']);
+        } else {
+            $this->dispatch('showToast', message: $result['message'], type: 'error');
+        }
     }
 
     public function render()
