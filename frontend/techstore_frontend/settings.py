@@ -118,4 +118,5 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Laravel API Configuration
-LARAVEL_API_BASE_URL = os.environ.get('LARAVEL_API_BASE_URL', 'http://127.0.0.1:8000/api')
+# Use Docker service name 'backend' for container-to-container communication
+LARAVEL_API_BASE_URL = os.environ.get('LARAVEL_API_BASE_URL', 'http://backend:8000/api')
