@@ -20,7 +20,12 @@ Route::prefix('dashboard')
     ->group(function () {
         Route::get('/', function () {
             return view('dashboard.dashboard');
-        })->name('index')->name('dashboard');
+        })->name('index');
+
+        // Fallback for login component redirect
+        Route::get('/dashboard-redirect', function () {
+            return redirect()->route('dashboard.index');
+        })->name('dashboard');
         
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
