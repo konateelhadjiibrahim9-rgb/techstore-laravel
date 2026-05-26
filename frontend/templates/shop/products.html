@@ -13,24 +13,24 @@
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-4">Nos Produits</h1>
     
-    <form method="GET" class="mb-6">
+    <form id="filter-form" method="GET" class="mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-            <input type="text" name="search" placeholder="Rechercher..." value="{{ request.GET.search }}" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" name="search" id="search-input" placeholder="Rechercher..." value="{{ request.GET.search }}" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             
-            <select name="category_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select name="category_id" id="category-select" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Toutes les catégories</option>
                 {% for category in categories %}
                 <option value="{{ category.id }}" {% if request.GET.category_id == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
                 {% endfor %}
             </select>
             
-            <input type="number" name="min_price" placeholder="Prix min" value="{{ request.GET.min_price }}" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="min_price" id="min-price-input" placeholder="Prix min" value="{{ request.GET.min_price }}" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             
-            <input type="number" name="max_price" placeholder="Prix max" value="{{ request.GET.max_price }}" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="max_price" id="max-price-input" placeholder="Prix max" value="{{ request.GET.max_price }}" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         
         <div class="mb-4">
-            <select name="in_stock" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select name="in_stock" id="stock-select" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Tous les stocks</option>
                 <option value="true" {% if request.GET.in_stock == 'true' %}selected{% endif %}>En stock</option>
                 <option value="false" {% if request.GET.in_stock == 'false' %}selected{% endif %}>Rupture de stock</option>
@@ -44,8 +44,13 @@
     </form>
 </div>
 
-{% if products %}
-<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+<div id="loading" class="hidden text-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Chargement...</p>
+</div>
+
+<div id="products-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {% if products %}
     {% for product in products %}
     <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
         <div class="aspect-w-1 aspect-h-1 bg-gray-200">
@@ -68,24 +73,144 @@
         </div>
     </div>
     {% endfor %}
+    {% else %}
+    <div class="text-center py-12 col-span-full">
+        <p class="text-gray-600">Aucun produit disponible.</p>
+    </div>
+    {% endif %}
 </div>
 
-{% if pagination %}
-<div class="mt-8 flex justify-center gap-2">
+<div id="pagination" class="mt-8 flex justify-center gap-2">
+    {% if pagination %}
     {% if pagination.current_page > 1 %}
-    <a href="?page={{ pagination.current_page|add:'-1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category_id %}&category_id={{ request.GET.category_id }}{% endif %}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Précédent</a>
+    <a href="?page={{ pagination.current_page|add:'-1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category_id %}&category_id={{ request.GET.category_id }}{% endif %}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 pagination-link">Précédent</a>
     {% endif %}
     
     <span class="px-4 py-2 bg-blue-600 text-white rounded">Page {{ pagination.current_page }}</span>
     
     {% if pagination.current_page < pagination.last_page %}
-    <a href="?page={{ pagination.current_page|add:'1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category_id %}&category_id={{ request.GET.category_id }}{% endif %}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Suivant</a>
+    <a href="?page={{ pagination.current_page|add:'1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category_id %}&category_id={{ request.GET.category_id }}{% endif %}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 pagination-link">Suivant</a>
+    {% endif %}
     {% endif %}
 </div>
-{% endif %}
-{% else %}
-<div class="text-center py-12">
-    <p class="text-gray-600">Aucun produit disponible.</p>
-</div>
-{% endif %}
+
+<script>
+// AJAX filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('filter-form');
+    const searchInput = document.getElementById('search-input');
+    const categorySelect = document.getElementById('category-select');
+    const minPriceInput = document.getElementById('min-price-input');
+    const maxPriceInput = document.getElementById('max-price-input');
+    const stockSelect = document.getElementById('stock-select');
+    const productsGrid = document.getElementById('products-grid');
+    const paginationDiv = document.getElementById('pagination');
+    const loadingDiv = document.getElementById('loading');
+
+    // Debounce function for search input
+    let timeout;
+    function debounce(func, wait) {
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    // Function to fetch products via AJAX
+    function fetchProducts() {
+        loadingDiv.classList.remove('hidden');
+        productsGrid.classList.add('opacity-50');
+        
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData);
+        
+        fetch(`{% url 'shop:products' %}?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Update products grid
+            const newProductsGrid = doc.getElementById('products-grid');
+            if (newProductsGrid) {
+                productsGrid.innerHTML = newProductsGrid.innerHTML;
+            }
+            
+            // Update pagination
+            const newPagination = doc.getElementById('pagination');
+            if (newPagination) {
+                paginationDiv.innerHTML = newPagination.innerHTML;
+                attachPaginationListeners();
+            }
+            
+            loadingDiv.classList.add('hidden');
+            productsGrid.classList.remove('opacity-50');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingDiv.classList.add('hidden');
+            productsGrid.classList.remove('opacity-50');
+        });
+    }
+
+    // Attach event listeners to pagination links
+    function attachPaginationListeners() {
+        document.querySelectorAll('.pagination-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.history.pushState({}, '', this.href);
+                fetchProducts();
+            });
+        });
+    }
+
+    // Search input with debounce (500ms)
+    searchInput.addEventListener('input', debounce(function() {
+        window.history.pushState({}, '', form.action + '?' + new URLSearchParams(new FormData(form)).toString());
+        fetchProducts();
+    }, 500));
+
+    // Category select
+    categorySelect.addEventListener('change', function() {
+        window.history.pushState({}, '', form.action + '?' + new URLSearchParams(new FormData(form)).toString());
+        fetchProducts();
+    });
+
+    // Price inputs
+    minPriceInput.addEventListener('change', function() {
+        window.history.pushState({}, '', form.action + '?' + new URLSearchParams(new FormData(form)).toString());
+        fetchProducts();
+    });
+
+    maxPriceInput.addEventListener('change', function() {
+        window.history.pushState({}, '', form.action + '?' + new URLSearchParams(new FormData(form)).toString());
+        fetchProducts();
+    });
+
+    // Stock select
+    stockSelect.addEventListener('change', function() {
+        window.history.pushState({}, '', form.action + '?' + new URLSearchParams(new FormData(form)).toString());
+        fetchProducts();
+    });
+
+    // Form submit (prevent default)
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        fetchProducts();
+    });
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', function() {
+        fetchProducts();
+    });
+
+    // Initial pagination listeners
+    attachPaginationListeners();
+});
+</script>
 {% endblock %}
