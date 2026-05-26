@@ -28,6 +28,32 @@ class ProductList extends Component
         }
     }
 
+    // Reset pagination when filters change
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategoryFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingMinPrice()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingMaxPrice()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStockFilter()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $query = Product::with('category');
