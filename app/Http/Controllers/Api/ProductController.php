@@ -12,9 +12,7 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->get();
         
-        return response()->json([
-            'products' => $products,
-        ]);
+        return response()->json($products);
     }
 
     public function show($id)
