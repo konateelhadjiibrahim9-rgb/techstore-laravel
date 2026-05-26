@@ -46,6 +46,8 @@ class LaravelAPIClient:
                 raise Exception(f"Backend API error: {e.response.status_code}")
         except ValueError as e:
             raise Exception("Backend API returned invalid JSON")
+        except Exception as e:
+            raise Exception(f"Unexpected error: {str(e)}")
 
     def get_products(
         self,
@@ -58,39 +60,62 @@ class LaravelAPIClient:
         page: int = 1
     ) -> Dict[str, Any]:
         """Get products with filters from Laravel API"""
-        params = {
-            'per_page': per_page,
-            'page': page
-        }
+        try:
+            params = {
+                'per_page': per_page,
+                'page': page
+            }
 
-        if search:
-            params['search'] = search
-        if category_id:
-            params['category_id'] = category_id
-        if min_price:
-            params['min_price'] = min_price
-        if max_price:
-            params['max_price'] = max_price
-        if in_stock:
-            params['in_stock'] = in_stock
+            if search:
+                params['search'] = search
+            if category_id:
+                params['category_id'] = category_id
+            if min_price:
+                params['min_price'] = min_price
+            if max_price:
+                params['max_price'] = max_price
+            if in_stock:
+                params['in_stock'] = in_stock
 
-        return self._make_request('GET', 'products', params=params)
+            return self._make_request('GET', 'products', params=params)
+        except Exception as e:
+            # Return empty data structure to prevent crashes
+            return {
+                'data': [],
+                'current_page': 1,
+                'last_page': 1,
+                'total': 0
+            }
 
     def get_product(self, product_id: int) -> Dict[str, Any]:
         """Get single product by ID from Laravel API"""
-        return self._make_request('GET', f'products/{product_id}')
+        try:
+            return self._make_request('GET', f'products/{product_id}')
+        except Exception as e:
+            # Return empty product to prevent crashes
+            return {'product': None}
 
     def get_categories(self) -> List[Dict[str, Any]]:
         """Get all categories from Laravel API"""
-        return self._make_request('GET', 'categories')
+        try:
+            return self._make_request('GET', 'categories')
+        except Exception as e:
+            # Return empty list to prevent crashes
+            return []
 
     def create_order(self, order_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create order via Laravel API"""
-        return self._make_request('POST', 'orders', data=order_data)
+        try:
+            return self._make_request('POST', 'orders', data=order_data)
+        except Exception as e:
+            raise Exception(f"Failed to create order: {str(e)}")
 
     def create_quote(self, quote_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create quote via Laravel API"""
-        return self._make_request('POST', 'quotes', data=quote_data)
+        try:
+            return self._make_request('POST', 'quotes', data=quote_data)
+        except Exception as e:
+            raise Exception(f"Failed to create quote: {str(e)}")
 
 
 # Singleton instance
