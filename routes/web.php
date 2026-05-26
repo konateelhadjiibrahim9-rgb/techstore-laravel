@@ -19,7 +19,7 @@ Route::prefix('dashboard')
     ->name('dashboard.')
     ->group(function () {
         Route::get('/', function () {
-            return view('admin.dashboard');
+            return view('dashboard.dashboard');
         })->name('index');
         
         Route::get('/products', ProductList::class)->name('products.index');
@@ -29,14 +29,14 @@ Route::prefix('dashboard')
         Route::get('/orders', OrderList::class)->name('orders.index');
         
         Route::get('/deliveries', function () {
-            return view('admin.deliveries');
+            return view('dashboard.deliveries');
         })->name('deliveries.index');
-        
+
         Route::get('/quotes', QuoteList::class)->name('quotes.index');
-        
+
         Route::get('/admins', function () {
             $users = \App\Models\User::where('role', '!=', 'user')->get();
-            return view('admin.admins', ['users' => $users]);
+            return view('dashboard.admins', ['users' => $users]);
         })->name('admins.index');
         
         Route::post('/admins/{user}/role', function (\Illuminate\Http\Request $request, $userId) {
