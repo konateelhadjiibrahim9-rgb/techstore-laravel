@@ -5,10 +5,6 @@ use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\QuoteList;
-use App\Livewire\ShoppingCart;
-use App\Livewire\Checkout;
-use App\Livewire\OrderHistory;
-use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -17,53 +13,14 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/cart', ShoppingCart::class)->name('cart');
-
-Route::get('/checkout', Checkout::class)
-    ->middleware(['auth'])
-    ->name('checkout');
-
-Route::get('/order/confirmation/{order}', function ($order) {
-    return view('order-confirmation', ['orderNumber' => $order]);
-})->name('order.confirmation');
-
-// Payment routes
-Route::get('/payment/initiate/{orderId}', [PaymentController::class, 'initiatePayment'])
-    ->middleware(['auth'])
-    ->name('payment.initiate');
-
-Route::get('/payment/callback', [PaymentController::class, 'handleCallback'])
-    ->name('payment.callback');
-
-Route::post('/payment/notify', [PaymentController::class, 'handleNotification'])
-    ->name('payment.notify');
-
-Route::get('/payment/status/{orderId}', [PaymentController::class, 'checkPaymentStatus'])
-    ->name('payment.status');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::get('/my-orders', OrderHistory::class)
-    ->middleware(['auth'])
-    ->name('my-orders');
-
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
-// Admin redirect
-Route::redirect('/admin', '/admin/dashboard');
-
-// Admin routes
-Route::prefix('admin')
+// Admin Dashboard - Protected for admins only
+Route::prefix('dashboard')
     ->middleware(['auth', 'is.super.admin'])
-    ->name('admin.')
+    ->name('dashboard.')
     ->group(function () {
-        Route::get('/dashboard', function () {
+        Route::get('/', function () {
             return view('admin.dashboard');
-        })->name('dashboard');
+        })->name('index');
         
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
@@ -71,19 +28,16 @@ Route::prefix('admin')
         
         Route::get('/orders', OrderList::class)->name('orders.index');
         
-        // Deliveries management
         Route::get('/deliveries', function () {
             return view('admin.deliveries');
         })->name('deliveries.index');
         
-        // Quotes management
         Route::get('/quotes', QuoteList::class)->name('quotes.index');
         
-        // Admin management (super admin only)
         Route::get('/admins', function () {
             $users = \App\Models\User::where('role', '!=', 'user')->get();
             return view('admin.admins', ['users' => $users]);
-        })->middleware('is.super.admin')->name('admins.index');
+        })->name('admins.index');
         
         Route::post('/admins/{user}/role', function (\Illuminate\Http\Request $request, $userId) {
             $user = \App\Models\User::find($userId);
@@ -91,8 +45,8 @@ Route::prefix('admin')
                 $user->role = $request->role;
                 $user->save();
             }
-            return redirect()->route('admin.admins.index');
-        })->middleware('is.super.admin')->name('admins.update.role');
+            return redirect()->route('dashboard.admins.index');
+        })->name('admins.update.role');
     });
 
 require __DIR__.'/auth.php';

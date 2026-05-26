@@ -15,8 +15,13 @@ class IsSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isSuperAdmin()) {
-            abort(403, 'Accès non autorisé. Super admin uniquement.');
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
+        }
+
+        if (!auth()->user()->isSuperAdmin()) {
+            auth()->logout();
+            return redirect()->route('login')->with('error', 'Accès réservé aux administrateurs. Vous avez été déconnecté.');
         }
 
         return $next($request);

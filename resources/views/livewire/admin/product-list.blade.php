@@ -7,7 +7,7 @@
 
     <div class="mb-6 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-800">Liste des Produits</h1>
-        <a href="{{ route('admin.products.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+        <a href="{{ route('dashboard.products.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
             + Nouveau Produit
         </a>
     </div>
@@ -89,9 +89,9 @@
                             <div class="text-sm text-gray-500">{{ $product->sku }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('admin.products.edit', $product->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Modifier</a>
-                            <button 
-                                wire:click="deleteProduct({{ $product->id }})" 
+                            <a href="{{ route('dashboard.products.edit', $product->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Modifier</a>
+                            <button
+                                wire:click="deleteProduct({{ $product->id }})"
                                 wire:confirm="Êtes-vous sûr de vouloir supprimer ce produit ?"
                                 class="text-red-600 hover:text-red-900"
                             >
