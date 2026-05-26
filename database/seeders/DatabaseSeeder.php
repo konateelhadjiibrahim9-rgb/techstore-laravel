@@ -13,13 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Super Admin user
-        User::create([
-            'name' => 'Admin TechStore',
-            'email' => 'admin@techstore.com',
-            'password' => bcrypt('password123'),
-            'role' => 'super_admin',
-        ]);
+        // Create Super Admin user only if it doesn't exist
+        if (!User::where('email', 'admin@techstore.com')->exists()) {
+            User::create([
+                'name' => 'Admin TechStore',
+                'email' => 'admin@techstore.com',
+                'password' => bcrypt('password123'),
+                'role' => 'super_admin',
+            ]);
+        }
 
         $this->call([
             CategorySeeder::class,
