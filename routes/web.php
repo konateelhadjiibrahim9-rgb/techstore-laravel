@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
+use App\Livewire\Admin\QuoteList;
 use App\Livewire\ShoppingCart;
 use App\Livewire\Checkout;
 use App\Livewire\OrderHistory;
@@ -57,7 +58,7 @@ Route::redirect('/admin', '/admin/dashboard');
 
 // Admin routes
 Route::prefix('admin')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'is.super.admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', function () {
@@ -76,9 +77,7 @@ Route::prefix('admin')
         })->name('deliveries.index');
         
         // Quotes management
-        Route::get('/quotes', function () {
-            return view('admin.quotes');
-        })->name('quotes.index');
+        Route::get('/quotes', QuoteList::class)->name('quotes.index');
         
         // Admin management (super admin only)
         Route::get('/admins', function () {

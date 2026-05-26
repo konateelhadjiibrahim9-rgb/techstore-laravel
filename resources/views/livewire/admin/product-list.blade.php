@@ -12,13 +12,42 @@
         </a>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
         <input 
             type="text" 
             wire:model="search" 
-            placeholder="Rechercher un produit..." 
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Rechercher..." 
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
+        
+        <select wire:model="categoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Toutes les catégories</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
+        
+        <input 
+            type="number" 
+            wire:model="minPrice" 
+            placeholder="Prix min" 
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        
+        <input 
+            type="number" 
+            wire:model="maxPrice" 
+            placeholder="Prix max" 
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+    </div>
+
+    <div class="mb-4">
+        <select wire:model="stockFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Tous les stocks</option>
+            <option value="in_stock">En stock</option>
+            <option value="out_of_stock">Rupture de stock</option>
+        </select>
     </div>
 
     <div class="bg-white rounded-lg shadow overflow-hidden">
