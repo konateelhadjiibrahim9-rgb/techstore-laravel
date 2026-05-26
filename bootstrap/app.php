@@ -17,6 +17,15 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         
         $middleware->statefulApi();
+
+        // Configure CORS for Django frontend
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
