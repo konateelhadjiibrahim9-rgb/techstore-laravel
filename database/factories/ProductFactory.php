@@ -211,8 +211,8 @@ class ProductFactory extends Factory
         $productName = $product['name'];
         $brand = $product['brand'];
 
-        // Generate price in FCFA between 5,000 and 1,500,000 (no decimals)
-        $price = $this->faker->numberBetween(5000, 1500000);
+        // Generate price in FCFA between 5,000 and 999,000 (no decimals)
+        $price = $this->faker->numberBetween(5000, 999000);
 
         // Generate SKU (unique reference)
         $sku = strtoupper($brand) . '-' . $this->faker->bothify('???-####');
