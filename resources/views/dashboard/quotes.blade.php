@@ -5,7 +5,7 @@
     <div class="bg-white rounded-lg shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-900">Gestion des Devis</h2>
-            <a href="{{ route('admin.dashboard') }}" class="text-blue-600 hover:text-blue-800">
+            <a href="{{ route('dashboard.index') }}" class="text-blue-600 hover:text-blue-800">
                 ← Retour au tableau de bord
             </a>
         </div>

@@ -5,14 +5,14 @@
     <div class="bg-white rounded-lg shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-900">Gestion des Administrateurs</h2>
-            <a href="{{ route('admin.dashboard') }}" class="text-blue-600 hover:text-blue-800">
+            <a href="{{ route('dashboard.index') }}" class="text-blue-600 hover:text-blue-800">
                 ← Retour au tableau de bord
             </a>
         </div>
 
         <div class="mb-6">
             <h3 class="text-lg font-semibold text-gray-700 mb-4">Ajouter un administrateur</h3>
-            <form action="{{ route('admin.admins.update.role', ['user' => 'new']) }}" method="POST" class="flex gap-4">
+            <form action="{{ route('dashboard.admins.update.role', ['user' => 'new']) }}" method="POST" class="flex gap-4">
                 @csrf
                 <input type="email" name="email" placeholder="Email de l'utilisateur" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                 <select name="role" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -61,7 +61,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 @if($user->id !== auth()->id())
-                                    <form action="{{ route('admin.admins.update.role', ['user' => $user->id]) }}" method="POST" class="flex gap-2">
+                                    <form action="{{ route('dashboard.admins.update.role', ['user' => $user->id]) }}" method="POST" class="flex gap-2">
                                         @csrf
                                         <select name="role" class="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
