@@ -8,6 +8,7 @@ class LaravelAPIClient:
 
     def __init__(self):
         self.base_url = settings.LARAVEL_API_BASE_URL
+        self.backend_url = self.base_url.replace('/api', '')  # Remove /api for image URLs
         self.timeout = 10
 
     def _make_request(
@@ -49,6 +50,16 @@ class LaravelAPIClient:
         except Exception as e:
             raise Exception(f"Unexpected error: {str(e)}")
 
+    def _process_product_images(self, products: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Process product images to add full URLs"""
+        for product in products:
+            if product.get('image_path'):
+                # Construct full URL for image
+                product['image_url'] = f"{self.backend_url}/storage/{product['image_path']}"
+            else:
+                product['image_url'] = None
+        return products
+
     def get_products(
         self,
         search: Optional[str] = None,
@@ -77,7 +88,13 @@ class LaravelAPIClient:
             if in_stock:
                 params['in_stock'] = in_stock
 
-            return self._make_request('GET', 'products', params=params)
+            result = self._make_request('GET', 'products', params=params)
+            
+            # Process images
+            if 'data' in result:
+                result['data'] = self._process_product_images(result['data'])
+            
+            return result
         except Exception as e:
             # Return empty data structure to prevent crashes
             return {
@@ -90,7 +107,13 @@ class LaravelAPIClient:
     def get_product(self, product_id: int) -> Dict[str, Any]:
         """Get single product by ID from Laravel API"""
         try:
-            return self._make_request('GET', f'products/{product_id}')
+            result = self._make_request('GET', f'products/{product_id}')
+            
+            # Process image for single product
+            if 'product' in result and result['product']:
+                result['product'] = self._process_product_images([result['product']])[0]
+            
+            return result
         except Exception as e:
             # Return empty product to prevent crashes
             return {'product': None}
