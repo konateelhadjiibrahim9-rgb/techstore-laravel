@@ -223,6 +223,10 @@ class ProductFactory extends Factory
         // Get random category
         $category = Category::inRandomOrder()->first();
 
+        // Assign random image from existing files
+        $imageFiles = ['1779736587.png', '1779811874.png', '1779812299.png'];
+        $imagePath = 'products/' . $this->faker->randomElement($imageFiles);
+
         return [
             'name' => $productName,
             'brand' => $brand,
@@ -230,7 +234,7 @@ class ProductFactory extends Factory
             'price' => $price,
             'stock_quantity' => $stockQuantity,
             'sku' => $sku,
-            'image_path' => null, // Correct column name from migration
+            'image_path' => $imagePath,
             'category_id' => $category ? $category->id : null,
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => now(),
