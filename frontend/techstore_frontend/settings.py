@@ -116,3 +116,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Laravel API Configuration
+LARAVEL_API_BASE_URL = os.environ.get('LARAVEL_API_BASE_URL', 'http://localhost:8000/api')

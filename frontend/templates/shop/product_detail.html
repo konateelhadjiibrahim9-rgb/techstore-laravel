@@ -1,0 +1,70 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}{{ product.name }} - TechStore{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+    <strong class="font-bold">Erreur:</strong>
+    <span class="block sm:inline">{{ error }}</span>
+</div>
+{% endif %}
+
+{% if product %}
+<div class="max-w-4xl mx-auto">
+    <a href="{% url 'shop:products' %}" class="text-blue-600 hover:text-blue-800 mb-6 inline-block">← Retour aux produits</a>
+    
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+            <div>
+                {% if product.image_path %}
+                <img src="{{ product.image_path }}" alt="{{ product.name }}" class="w-full rounded-lg">
+                {% else %}
+                <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400">
+                    Pas d'image
+                </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+                <p class="text-lg text-gray-600 mb-2">{{ product.brand }}</p>
+                <p class="text-sm text-gray-500 mb-4">SKU: {{ product.sku }}</p>
+                
+                <p class="text-3xl font-bold text-blue-600 mb-4">{{ product.price|floatformat:0 }} FCFA</p>
+                
+                <p class="text-sm {% if product.stock_quantity > 0 %}text-green-600{% else %}text-red-600{% endif %} mb-6">
+                    {% if product.stock_quantity > 0 %}
+                    En stock ({{ product.stock_quantity }} unités)
+                    {% else %}
+                    Rupture de stock
+                    {% endif %}
+                </p>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Description</h3>
+                    <p class="text-gray-600">{{ product.description }}</p>
+                </div>
+                
+                {% if product.category %}
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Catégorie</h3>
+                    <p class="text-gray-600">{{ product.category.name }}</p>
+                </div>
+                {% endif %}
+                
+                <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors {% if product.stock_quantity <= 0 %}opacity-50 cursor-not-allowed{% endif %}" 
+                        {% if product.stock_quantity <= 0 %}disabled{% endif %}>
+                    {% if product.stock_quantity > 0 %}Ajouter au panier{% else %}Indisponible{% endif %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-12">
+    <p class="text-gray-600">Produit non trouvé.</p>
+    <a href="{% url 'shop:products' %}" class="text-blue-600 hover:text-blue-800">Retour aux produits</a>
+</div>
+{% endif %}
+{% endblock %}
