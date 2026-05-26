@@ -9,7 +9,12 @@ use App\Livewire\Checkout;
 use App\Livewire\OrderHistory;
 use App\Http\Controllers\PaymentController;
 
-Route::view('/', 'welcome');
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
+});
 
 Route::get('/cart', ShoppingCart::class)->name('cart');
 
