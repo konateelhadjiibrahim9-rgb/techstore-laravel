@@ -39,6 +39,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=techstore_frontend.settings
       - BACKEND_URL=http://backend:8000
+      - LARAVEL_API_BASE_URL=http://backend:8000/api
     depends_on:
       - backend
     networks:
