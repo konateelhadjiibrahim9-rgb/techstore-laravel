@@ -65,6 +65,16 @@ Route::prefix('admin')
         
         Route::get('/orders', OrderList::class)->name('orders.index');
         
+        // Deliveries management
+        Route::get('/deliveries', function () {
+            return view('admin.deliveries');
+        })->name('deliveries.index');
+        
+        // Quotes management
+        Route::get('/quotes', function () {
+            return view('admin.quotes');
+        })->name('quotes.index');
+        
         // Admin management (super admin only)
         Route::get('/admins', function () {
             $users = \App\Models\User::where('role', '!=', 'user')->get();
