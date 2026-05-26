@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('brand');
             $table->string('sku')->unique();
             $table->text('description');
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 12, 2);
             $table->integer('stock_quantity')->default(0);
             $table->string('image_path')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
