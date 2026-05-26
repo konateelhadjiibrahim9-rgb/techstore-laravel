@@ -20,7 +20,7 @@ Route::prefix('dashboard')
     ->group(function () {
         Route::get('/', function () {
             return view('dashboard.dashboard');
-        })->name('index');
+        })->name('index')->name('dashboard');
         
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
