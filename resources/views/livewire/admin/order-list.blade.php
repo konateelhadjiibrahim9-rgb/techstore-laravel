@@ -57,7 +57,7 @@
                             <div class="text-sm text-gray-500">{{ $order->shipping_phone }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ number_format($order->total_amount, 2, ',', ' ') }} €</div>
+                            <div class="text-sm font-medium text-gray-900">{{ number_format($order->total_amount, 0, ',', ' ') }} FCFA</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-500">{{ $order->created_at->format('d/m/Y H:i') }}</div>

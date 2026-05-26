@@ -78,7 +78,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ number_format($product->price, 2, ',', ' ') }} €</div>
+                            <div class="text-sm text-gray-900">{{ number_format($product->price, 0, ',', ' ') }} FCFA</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm {{ $product->stock_quantity > 10 ? 'text-green-600' : ($product->stock_quantity > 0 ? 'text-orange-600' : 'text-red-600') }}">
