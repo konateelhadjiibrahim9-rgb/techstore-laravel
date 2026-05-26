@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import JsonResponse
 import requests
 import os
@@ -24,7 +24,7 @@ def products_view(request):
     backend_url = os.environ.get('BACKEND_URL', 'http://localhost:8000')
     try:
         response = requests.get(f'{backend_url}/api/products', headers={'Accept': 'application/json'}, timeout=10)
-        
+
         # Check response status
         if response.status_code != 200:
             return JsonResponse({
@@ -32,7 +32,7 @@ def products_view(request):
                 'status_code': response.status_code,
                 'response_text': response.text[:500]
             }, status=response.status_code)
-        
+
         # Check if response is JSON
         content_type = response.headers.get('Content-Type', '')
         if 'application/json' not in content_type:
@@ -42,19 +42,19 @@ def products_view(request):
                 'content_type': content_type,
                 'response_text': response.text[:500]
             }, status=500)
-        
+
         # Parse JSON
         products_data = response.json()
-        
+
         # Ensure data is a list or dict
         if not isinstance(products_data, (list, dict)):
             return JsonResponse({
                 'error': 'Backend returned unexpected data type',
                 'data_type': str(type(products_data))
             }, status=500)
-        
+
         return JsonResponse(products_data, safe=False)
-        
+
     except requests.Timeout:
         return JsonResponse({'error': 'Backend request timed out'}, status=504)
     except requests.RequestException as e:
@@ -73,5 +73,6 @@ def products_view(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('shop.urls')),
     path('api/products/', products_view),
 ]

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TechStore - Boutique en ligne{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'shop:home' %}" class="text-2xl font-bold text-blue-600">TechStore</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'shop:home' %}" class="text-gray-700 hover:text-blue-600">Accueil</a>
+                    <a href="{% url 'shop:products' %}" class="text-gray-700 hover:text-blue-600">Produits</a>
+                    {% if user.is_authenticated %}
+                        <span class="text-gray-700">{{ user.username }}</span>
+                        <a href="/logout" class="text-red-600 hover:text-red-800">Déconnexion</a>
+                    {% else %}
+                        <a href="/login" class="text-blue-600 hover:text-blue-800">Connexion</a>
+                        <a href="/register" class="text-green-600 hover:text-green-800">Inscription</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 TechStore. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>
