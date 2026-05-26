@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+import json
 from .services import api_client
 
 
@@ -103,4 +105,33 @@ def quote_form(request):
             })
 
     return render(request, 'shop/quote_form.html')
+
+
+@require_http_methods(["GET", "POST"])
+def cart(request):
+    """Shopping cart and order submission"""
+    if request.method == 'POST':
+        try:
+            # Parse order data from POST
+            order_data = {
+                'customer_name': request.POST.get('customer_name'),
+                'customer_email': request.POST.get('customer_email'),
+                'customer_phone': request.POST.get('customer_phone'),
+                'shipping_address': request.POST.get('shipping_address'),
+                'items': json.loads(request.POST.get('items', '[]')),
+                'total_amount': float(request.POST.get('total_amount', 0))
+            }
+
+            # Send order to Laravel API
+            result = api_client.create_order(order_data)
+            return render(request, 'shop/order_success.html', {
+                'order': result.get('order')
+            })
+
+        except Exception as e:
+            return render(request, 'shop/cart.html', {
+                'error': str(e)
+            })
+
+    return render(request, 'shop/cart.html')
 
