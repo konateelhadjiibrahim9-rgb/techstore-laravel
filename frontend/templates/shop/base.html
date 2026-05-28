@@ -1,41 +1,84 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}TechStore - Boutique en ligne{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TechStore - Boutique en ligne</title>
+    
+    <!-- Police Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --color-primary: #1e293b;      /* Bleu marine */
+            --color-secondary: #64748b;    /* Gris anthracite */
+            --color-accent: #f97316;       /* Orange dynamique */
+            --color-accent-hover: #ea580c; /* Orange hover */
+            --color-bg: #f8fafc;           /* Gris très clair */
+            --color-white: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --border-radius-sm: 0.375rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --border-radius-xl: 1rem;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+        }
+        
+        .btn-primary {
+            background-color: var(--color-accent);
+            color: var(--color-white);
+            border-radius: var(--border-radius-md);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card {
+            background-color: var(--color-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{% url 'shop:home' %}" class="text-2xl font-bold text-blue-600">TechStore</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="{% url 'shop:home' %}" class="text-gray-700 hover:text-blue-600">Accueil</a>
-                    <a href="{% url 'shop:products' %}" class="text-gray-700 hover:text-blue-600">Produits</a>
-                    {% if user.is_authenticated %}
-                        <span class="text-gray-700">{{ user.username }}</span>
-                        <a href="/logout" class="text-red-600 hover:text-red-800">Déconnexion</a>
-                    {% else %}
-                        <a href="/login" class="text-blue-600 hover:text-blue-800">Connexion</a>
-                        <a href="/register" class="text-green-600 hover:text-green-800">Inscription</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </nav>
+<body class="font-sans antialiased bg-gray-50">
+    <!-- Header personnalisé -->
+    {% include 'shop/components/header.html' %}
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Contenu principal -->
+    <main class="pt-[72px] min-h-screen">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-gray-800 text-white py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2026 TechStore. Tous droits réservés.</p>
-        </div>
-    </footer>
+    <!-- Footer personnalisé -->
+    {% include 'shop/components/footer.html' %}
+
+    <!-- WhatsApp flottant -->
+    {% include 'shop/components/whatsapp-float.html' %}
 </body>
 </html>
