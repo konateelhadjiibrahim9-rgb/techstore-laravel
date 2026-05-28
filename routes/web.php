@@ -29,9 +29,9 @@ Route::prefix('dashboard')
     });
 
 // Admin Dashboard - Protected for admins only
-Route::prefix('dashboard')
+Route::prefix('admin')
     ->middleware(['auth', 'is.super.admin'])
-    ->name('dashboard.')
+    ->name('admin.')
     ->group(function () {
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
@@ -56,7 +56,7 @@ Route::prefix('dashboard')
                 $user->role = $request->role;
                 $user->save();
             }
-            return redirect()->route('dashboard.admins.index');
+            return redirect()->route('admin.admins.index');
         })->name('admins.update.role');
     });
 
