@@ -1,9 +1,0 @@
-name: CI/CD Pipeline - Minimal
-on: [push]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test simple
-        run: echo "Test minimal réussi"
