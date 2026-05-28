@@ -23,6 +23,8 @@ Route::prefix('dashboard')
         Route::get('/products', [DashboardController::class, 'products'])->name('products');
         Route::get('/my-orders', [DashboardController::class, 'myOrders'])->name('my-orders');
         Route::get('/my-invoices', [DashboardController::class, 'myInvoices'])->name('my-invoices');
+        Route::get('/quote/create', [DashboardController::class, 'createQuote'])->name('quote.create');
+        Route::post('/quote', [DashboardController::class, 'storeQuote'])->name('quote.store');
         Route::get('/search', [DashboardController::class, 'search'])->name('search');
     });
 

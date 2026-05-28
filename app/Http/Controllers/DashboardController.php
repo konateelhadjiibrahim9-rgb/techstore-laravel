@@ -8,9 +8,17 @@ use App\Models\Quote;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
+use App\Services\DeliveryService;
 
 class DashboardController extends Controller
 {
+    protected $deliveryService;
+
+    public function __construct(DeliveryService $deliveryService)
+    {
+        $this->deliveryService = $deliveryService;
+    }
+
     /**
      * Dashboard principal avec switcher de profil
      */
@@ -72,6 +80,42 @@ class DashboardController extends Controller
         return view('dashboard.my-invoices', [
             'invoices' => auth()->user()->orders()->whereIn('status', ['paid', 'shipped', 'delivered'])->latest()->get(),
         ]);
+    }
+
+    /**
+     * Formulaire de demande de devis
+     */
+    public function createQuote()
+    {
+        return view('dashboard.quote-form');
+    }
+
+    /**
+     * Stocker une demande de devis
+     */
+    public function storeQuote(Request $request)
+    {
+        $validated = $request->validate([
+            'company' => 'required|string|max:255',
+            'contact_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'category' => 'required|string|max:255',
+            'description' => 'required|string',
+            'budget' => 'nullable|numeric|min:0',
+        ]);
+
+        $quote = Quote::create([
+            'user_id' => auth()->id(),
+            'product_category_id' => null, // À adapter selon la logique métier
+            'status' => 'pending',
+            'reference' => 'DEV-' . strtoupper(uniqid()),
+            'data' => $validated,
+            'documents' => [],
+        ]);
+
+        return redirect()->route('dashboard.my-orders')
+            ->with('success', 'Votre demande de devis a été envoyée avec succès. Nous vous contacterons sous 24h.');
     }
 
     /**
