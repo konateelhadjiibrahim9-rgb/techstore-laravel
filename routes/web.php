@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
@@ -13,20 +14,23 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Portail de Services - Dashboard principal
+Route::prefix('dashboard')
+    ->middleware(['auth'])
+    ->name('dashboard.')
+    ->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('index');
+        Route::get('/services', [DashboardController::class, 'services'])->name('services');
+        Route::get('/my-requests', [DashboardController::class, 'myRequests'])->name('my-requests');
+        Route::get('/my-documents', [DashboardController::class, 'myDocuments'])->name('my-documents');
+        Route::get('/search', [DashboardController::class, 'search'])->name('search');
+    });
+
 // Admin Dashboard - Protected for admins only
 Route::prefix('dashboard')
     ->middleware(['auth', 'is.super.admin'])
     ->name('dashboard.')
     ->group(function () {
-        Route::get('/', function () {
-            return view('dashboard.dashboard');
-        })->name('index');
-
-        // Fallback for login component redirect
-        Route::get('/dashboard-redirect', function () {
-            return redirect()->route('dashboard.index');
-        })->name('dashboard');
-        
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
         Route::get('/products/{product}/edit', ProductForm::class)->name('products.edit');
