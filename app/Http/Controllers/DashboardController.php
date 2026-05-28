@@ -110,7 +110,15 @@ class DashboardController extends Controller
             'product_category_id' => null, // À adapter selon la logique métier
             'status' => 'pending',
             'reference' => 'DEV-' . strtoupper(uniqid()),
-            'data' => $validated,
+            'data' => array_merge($validated, [
+                'emitter' => [
+                    'name' => 'Konate El Hadji Ibrahim',
+                    'title' => 'Full-Stack Developer',
+                    'company' => 'TechStore',
+                    'contact' => '+225 07 00 00 00 00',
+                    'email' => 'contact@techstore.ci',
+                ],
+            ]),
             'documents' => [],
         ]);
 

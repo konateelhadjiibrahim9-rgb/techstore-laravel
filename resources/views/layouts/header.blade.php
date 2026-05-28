@@ -11,6 +11,14 @@
                 </a>
             </div>
 
+            <!-- Badge Expert -->
+            <div class="hidden lg:flex items-center space-x-2 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
+                <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-xs">KE</span>
+                </div>
+                <span class="text-sm text-blue-900 font-medium">Expertise par Konate El Hadji Ibrahim</span>
+            </div>
+
             <!-- Barre de recherche (Desktop) -->
             <div class="hidden md:flex flex-1 max-w-xl mx-8">
                 <div class="relative">

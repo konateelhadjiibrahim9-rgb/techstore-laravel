@@ -1,6 +1,6 @@
 <footer class="bg-blue-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
             <!-- Brand -->
             <div>
                 <div class="flex items-center space-x-2 mb-4">
@@ -75,10 +75,41 @@
                     WhatsApp
                 </a>
             </div>
+
+            <!-- À propos de l'expert -->
+            <div class="bg-blue-800 rounded-lg p-4">
+                <h3 class="text-lg font-semibold mb-3">À propos de l'expert</h3>
+                <div class="space-y-3">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-sm">KE</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-white">Konate El Hadji Ibrahim</p>
+                            <p class="text-gray-300 text-sm">Full-Stack Developer</p>
+                        </div>
+                    </div>
+                    <div class="text-gray-300 text-sm">
+                        <p class="font-medium text-orange-400 mb-1">Formation</p>
+                        <p>Diplômé en Informatique Développeur d'Application (IDA)</p>
+                        <p class="text-gray-400">Groupe LOKO</p>
+                    </div>
+                    <div class="text-gray-300 text-sm">
+                        <p class="font-medium text-orange-400 mb-1">Expertise</p>
+                        <p>Laravel, Vue.js, Docker, CI/CD</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2026 TechStore. Tous droits réservés.</p>
+        <div class="border-t border-gray-700 mt-8 pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <p class="text-gray-400 text-sm">&copy; 2026 TechStore. Tous droits réservés.</p>
+                <div class="flex items-center space-x-2 text-gray-400 text-sm">
+                    <span>Technologie & Expertise par</span>
+                    <span class="font-semibold text-orange-400">Konate El Hadji Ibrahim</span>
+                </div>
+            </div>
         </div>
     </div>
 </footer>
