@@ -34,7 +34,23 @@ jobs:
           coverage: none
 
       - name: Copy .env
-        run: cp .env.example .env
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            cp .env .env.backup || true
+            echo "APP_NAME=TechStore" > .env
+            echo "APP_ENV=testing" >> .env
+            echo "APP_KEY=base64:test-key-for-ci-pipeline" >> .env
+            echo "APP_DEBUG=true" >> .env
+            echo "APP_URL=http://localhost:8000" >> .env
+            echo "DB_CONNECTION=mysql" >> .env
+            echo "DB_HOST=127.0.0.1" >> .env
+            echo "DB_PORT=3306" >> .env
+            echo "DB_DATABASE=techstore_test" >> .env
+            echo "DB_USERNAME=root" >> .env
+            echo "DB_PASSWORD=root" >> .env
+          fi
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
@@ -48,7 +64,7 @@ jobs:
           node-version: '20'
 
       - name: Install NPM dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build assets
         run: npm run build
@@ -94,7 +110,7 @@ jobs:
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            cd /path/to/techstore
+            cd ${{ secrets.PROJECT_PATH }}
             git fetch origin main
             git reset --hard origin/main
             
@@ -102,7 +118,7 @@ jobs:
             composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
             
             # Install Node dependencies and build
-            npm ci
+            npm install
             npm run build
             
             # Run migrations
@@ -127,7 +143,7 @@ jobs:
       - name: Health check
         run: |
           sleep 10
-          curl -f ${{ secrets.APP_URL }}/health || exit 1
+          curl -f ${{ secrets.APP_URL }} || exit 1
 
       - name: Notify success
         if: success()

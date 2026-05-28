@@ -17,7 +17,11 @@ Pour que le pipeline fonctionne, vous devez configurer les secrets suivants dans
    - Nom d'utilisateur SSH sur votre serveur
    - Exemple : `root` ou `ubuntu`
 
-4. **APP_URL**
+4. **PROJECT_PATH**
+   - Chemin absolu du projet sur votre serveur
+   - Exemple : `/home/user/techstore` ou `/var/www/techstore`
+
+5. **APP_URL**
    - URL de votre application déployée
    - Exemple : `https://techstore.ci`
 
