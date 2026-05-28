@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -23,8 +24,10 @@ class ProductController extends Controller
         }
 
         // Filter by category
-        if ($request->has('category_id')) {
-            $query->where('category_id', $request->category_id);
+        if ($request->has('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('category', $request->category);
+            });
         }
 
         // Filter by price range
@@ -45,18 +48,16 @@ class ProductController extends Controller
         }
 
         // Pagination
-        $perPage = $request->has('per_page') ? (int) $request->per_page : 20;
+        $perPage = $request->has('per_page') ? (int) $request->per_page : 15;
         $products = $query->paginate($perPage);
 
-        return response()->json($products);
+        return ProductResource::collection($products);
     }
 
     public function show($id)
     {
         $product = Product::with('category')->findOrFail($id);
 
-        return response()->json([
-            'product' => $product,
-        ]);
+        return new ProductResource($product);
     }
 }

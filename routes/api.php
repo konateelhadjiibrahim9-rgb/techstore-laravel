@@ -9,28 +9,32 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\QuoteController;
 
 // Public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 
 // Products routes (public for frontend Django)
 Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
 
 // Categories routes (public for frontend Django)
 Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/{category}', [CategoryController::class, 'show']);
-
-// Orders route (public for frontend Django)
-Route::post('/orders', [OrderController::class, 'store']);
-
-// Quotes route (public for frontend Django)
-Route::post('/quotes', [QuoteController::class, 'store']);
+Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    // Auth routes
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/user', [AuthController::class, 'user']);
     
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // Orders routes
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
+    
+    // Quotes routes
+    Route::get('/quotes', [QuoteController::class, 'index']);
+    Route::get('/quotes/{id}', [QuoteController::class, 'show']);
+    Route::post('/quotes', [QuoteController::class, 'store']);
+    Route::patch('/quotes/{id}/status', [QuoteController::class, 'updateStatus']);
 });
