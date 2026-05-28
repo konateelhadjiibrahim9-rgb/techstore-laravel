@@ -1,22 +1,22 @@
-<header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm" style="height: 72px;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div class="flex items-center justify-between h-full">
             <!-- Logo -->
             <div class="flex items-center">
-                <a href="{{ route('dashboard.index', ['profile' => 'individual']) }}" class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-900 to-blue-700 rounded-lg flex items-center justify-center">
+                <a href="{{ route('dashboard.index', ['profile' => 'individual']) }}" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
                         <span class="text-white font-bold text-lg">TS</span>
                     </div>
-                    <span class="text-xl font-bold text-gray-900">TechStore</span>
+                    <span class="text-xl font-bold text-[#1e293b] group-hover:text-[#f97316] transition-colors">TechStore</span>
                 </a>
             </div>
 
-            <!-- Badge Expert -->
-            <div class="hidden lg:flex items-center space-x-2 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
-                <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+            <!-- Badge Expert (Desktop) -->
+            <div class="hidden lg:flex items-center space-x-2 bg-[#f8fafc] px-4 py-2 rounded-full border border-[#e2e8f0]">
+                <div class="w-7 h-7 bg-[#f97316] rounded-full flex items-center justify-center shadow-sm">
                     <span class="text-white font-bold text-xs">KE</span>
                 </div>
-                <span class="text-sm text-blue-900 font-medium">Expertise par Konate El Hadji Ibrahim</span>
+                <span class="text-sm text-[#1e293b] font-medium">Expertise par Konate El Hadji Ibrahim</span>
             </div>
 
             <!-- Barre de recherche (Desktop) -->
@@ -24,29 +24,31 @@
                 <div class="relative">
                     <input type="text" 
                            placeholder="Rechercher PC, serveurs, composants..." 
-                           class="w-full px-4 py-2 pl-10 rounded-full border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all">
-                    <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           class="w-full px-4 py-2.5 pl-11 rounded-full border border-[#e2e8f0] focus:border-[#f97316] focus:ring-2 focus:ring-[#f97316]/20 transition-all text-[#1e293b] placeholder-[#64748b] bg-[#f8fafc] focus:bg-white">
+                    <svg class="absolute left-3.5 top-3 w-5 h-5 text-[#64748b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
             </div>
 
             <!-- Navigation Desktop -->
-            <nav class="hidden md:flex items-center space-x-6">
-                <a href="{{ route('dashboard.products', ['profile' => 'individual']) }}" class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="{{ route('dashboard.products', ['profile' => 'individual']) }}" class="text-[#1e293b] hover:text-[#f97316] font-medium transition-colors relative group">
                     Produits
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#f97316] transition-all group-hover:w-full"></span>
                 </a>
-                <a href="{{ route('dashboard.my-orders') }}" class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                <a href="{{ route('dashboard.my-orders') }}" class="text-[#1e293b] hover:text-[#f97316] font-medium transition-colors relative group">
                     Mes Commandes
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#f97316] transition-all group-hover:w-full"></span>
                 </a>
-                <button class="bg-orange-600 text-white px-4 py-2 rounded-full hover:bg-orange-700 transition-colors shadow-md hover:shadow-lg">
+                <button class="btn-primary">
                     Demander un Devis
                 </button>
             </nav>
 
             <!-- Menu Burger Mobile -->
-            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-[#f8fafc] transition-colors">
+                <svg class="w-6 h-6 text-[#1e293b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
