@@ -25,7 +25,7 @@
                         <nav class="flex items-center space-x-4">
                             <livewire:cart-counter />
                             @auth
-                                <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-gray-900">Dashboard</a>
+                                <a href="{{ route('dashboard.index') }}" class="text-gray-700 hover:text-gray-900">Dashboard</a>
                             @endauth
                         </nav>
                     </div>

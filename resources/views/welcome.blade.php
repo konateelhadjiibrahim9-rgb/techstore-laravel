@@ -33,7 +33,7 @@
                             @if (Route::has('login'))
                                 @auth
                                     <a href="{{ route('my-orders') }}" class="text-gray-700 hover:text-gray-900">Mes Commandes</a>
-                                    <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-gray-900">Dashboard</a>
+                                    <a href="{{ route('dashboard.index') }}" class="text-gray-700 hover:text-gray-900">Dashboard</a>
                                 @else
                                     <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">Connexion</a>
                                     <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Inscription</a>

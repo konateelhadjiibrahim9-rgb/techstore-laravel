@@ -8,7 +8,7 @@ use App\Livewire\Admin\QuoteList;
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard.index');
     }
     return redirect()->route('login');
 });
