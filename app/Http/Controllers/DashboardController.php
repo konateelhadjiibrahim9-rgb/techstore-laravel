@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Service;
-use App\Models\ServiceRequest;
+use App\Models\ProductCategory;
+use App\Models\Quote;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
@@ -16,80 +16,76 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $profile = $request->get('profile', 'citizen'); // citizen | enterprise
+        $profile = $request->get('profile', 'individual'); // individual | enterprise
         
         return view('dashboard.index', [
             'profile' => $profile,
-            'services' => Service::where('profile', $profile)->get(),
-            'recentRequests' => auth()->user()->serviceRequests()->latest()->limit(5)->get(),
+            'productCategories' => ProductCategory::where('profile', $profile)->get(),
+            'recentQuotes' => auth()->user()->quotes()->latest()->limit(5)->get(),
             'stats' => $this->getDashboardStats($profile),
         ]);
     }
 
     /**
-     * Catalogue de services
+     * Catalogue de produits par catégories
      */
-    public function services(Request $request)
+    public function products(Request $request)
     {
         $category = $request->get('category');
-        $profile = $request->get('profile', 'citizen');
+        $profile = $request->get('profile', 'individual');
         
-        $services = Service::where('profile', $profile)
+        $productCategories = ProductCategory::where('profile', $profile)
             ->when($category, fn($q) => $q->where('category', $category))
             ->get();
         
-        return view('dashboard.services', [
-            'services' => $services,
-            'categories' => Service::where('profile', $profile)->distinct('category')->pluck('category'),
+        return view('dashboard.products', [
+            'productCategories' => $productCategories,
+            'categories' => ProductCategory::where('profile', $profile)->distinct('category')->pluck('category'),
             'profile' => $profile,
         ]);
     }
 
     /**
-     * Suivi des demandes de l'utilisateur
+     * Suivi des commandes et devis de l'utilisateur
      */
-    public function myRequests()
+    public function myOrders()
     {
-        $requests = auth()->user()->serviceRequests()->latest()->get();
+        $quotes = auth()->user()->quotes()->latest()->get();
+        $orders = auth()->user()->orders()->latest()->get();
         
-        return view('dashboard.my-requests', [
-            'requests' => $requests,
+        return view('dashboard.my-orders', [
+            'quotes' => $quotes,
+            'orders' => $orders,
             'stats' => [
-                'pending' => auth()->user()->serviceRequests()->where('status', 'pending')->count(),
-                'in_progress' => auth()->user()->serviceRequests()->where('status', 'in_progress')->count(),
-                'completed' => auth()->user()->serviceRequests()->where('status', 'completed')->count(),
-                'rejected' => auth()->user()->serviceRequests()->where('status', 'rejected')->count(),
+                'pending_quotes' => auth()->user()->quotes()->where('status', 'pending')->count(),
+                'pending_orders' => auth()->user()->orders()->where('status', 'pending')->count(),
+                'completed' => auth()->user()->orders()->where('status', 'completed')->count(),
             ],
         ]);
     }
 
     /**
-     * Espace documents de l'utilisateur
+     * Espace factures et garanties de l'utilisateur
      */
-    public function myDocuments()
+    public function myInvoices()
     {
-        return view('dashboard.my-documents', [
-            'documents' => auth()->user()->documents()->latest()->get(),
+        return view('dashboard.my-invoices', [
+            'invoices' => auth()->user()->orders()->whereIn('status', ['paid', 'shipped', 'delivered'])->latest()->get(),
         ]);
     }
 
     /**
-     * Recherche globale
+     * Recherche globale de produits
      */
     public function search(Request $request)
     {
         $query = $request->get('q');
-        
-        $services = Service::where('name', 'like', "%{$query}%")
-            ->orWhere('description', 'like', "%{$query}%")
-            ->get();
         
         $products = Product::where('name', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
             ->get();
         
         return view('dashboard.search', [
-            'services' => $services,
             'products' => $products,
             'query' => $query,
         ]);
@@ -101,9 +97,9 @@ class DashboardController extends Controller
     private function getDashboardStats($profile)
     {
         return [
-            'services' => Service::where('profile', $profile)->count(),
-            'requests' => auth()->user()->serviceRequests()->count(),
-            'pending' => auth()->user()->serviceRequests()->where('status', 'pending')->count(),
+            'productCategories' => ProductCategory::where('profile', $profile)->count(),
+            'quotes' => auth()->user()->quotes()->count(),
+            'pending_quotes' => auth()->user()->quotes()->where('status', 'pending')->count(),
         ];
     }
 }

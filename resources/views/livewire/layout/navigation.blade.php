@@ -5,7 +5,7 @@ use Livewire\Volt\Component;
 
 new class extends Component
 {
-    public $profile = 'citizen';
+    public $profile = 'individual';
 
     public function switchProfile($profile)
     {
@@ -39,8 +39,8 @@ new class extends Component
                 <!-- Profile Switcher -->
                 <div class="hidden sm:flex sm:items-center sm:ms-8">
                     <div class="flex space-x-2">
-                        <button wire:click="switchProfile('citizen')" class="px-4 py-2 rounded-lg text-sm font-medium {{ $profile === 'citizen' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                            🏠 Citoyen
+                        <button wire:click="switchProfile('individual')" class="px-4 py-2 rounded-lg text-sm font-medium {{ $profile === 'individual' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                            👤 Particulier
                         </button>
                         <button wire:click="switchProfile('enterprise')" class="px-4 py-2 rounded-lg text-sm font-medium {{ $profile === 'enterprise' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                             🏢 Entreprise
@@ -53,14 +53,14 @@ new class extends Component
                     <x-nav-link :href="route('dashboard.index', ['profile' => $profile])" :active="request()->routeIs('dashboard.index')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard.services', ['profile' => $profile])" :active="request()->routeIs('dashboard.services')" wire:navigate>
-                        {{ __('Services') }}
+                    <x-nav-link :href="route('dashboard.products', ['profile' => $profile])" :active="request()->routeIs('dashboard.products')" wire:navigate>
+                        {{ __('Produits') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard.my-requests')" :active="request()->routeIs('dashboard.my-requests')" wire:navigate>
-                        {{ __('Mes demandes') }}
+                    <x-nav-link :href="route('dashboard.my-orders')" :active="request()->routeIs('dashboard.my-orders')" wire:navigate>
+                        {{ __('Mes commandes') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard.my-documents')" :active="request()->routeIs('dashboard.my-documents')" wire:navigate>
-                        {{ __('Mes documents') }}
+                    <x-nav-link :href="route('dashboard.my-invoices')" :active="request()->routeIs('dashboard.my-invoices')" wire:navigate>
+                        {{ __('Mes factures') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -113,14 +113,14 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard.index', ['profile' => $profile])" :active="request()->routeIs('dashboard.index')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard.services', ['profile' => $profile])" :active="request()->routeIs('dashboard.services')" wire:navigate>
-                {{ __('Services') }}
+            <x-responsive-nav-link :href="route('dashboard.products', ['profile' => $profile])" :active="request()->routeIs('dashboard.products')" wire:navigate>
+                {{ __('Produits') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard.my-requests')" :active="request()->routeIs('dashboard.my-requests')" wire:navigate>
-                {{ __('Mes demandes') }}
+            <x-responsive-nav-link :href="route('dashboard.my-orders')" :active="request()->routeIs('dashboard.my-orders')" wire:navigate>
+                {{ __('Mes commandes') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard.my-documents')" :active="request()->routeIs('dashboard.my-documents')" wire:navigate>
-                {{ __('Mes documents') }}
+            <x-responsive-nav-link :href="route('dashboard.my-invoices')" :active="request()->routeIs('dashboard.my-invoices')" wire:navigate>
+                {{ __('Mes factures') }}
             </x-responsive-nav-link>
         </div>
 

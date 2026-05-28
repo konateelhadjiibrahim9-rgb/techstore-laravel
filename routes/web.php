@@ -14,15 +14,15 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Portail de Services - Dashboard principal
+// Portail de Produits - Dashboard principal
 Route::prefix('dashboard')
     ->middleware(['auth'])
     ->name('dashboard.')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('index');
-        Route::get('/services', [DashboardController::class, 'services'])->name('services');
-        Route::get('/my-requests', [DashboardController::class, 'myRequests'])->name('my-requests');
-        Route::get('/my-documents', [DashboardController::class, 'myDocuments'])->name('my-documents');
+        Route::get('/products', [DashboardController::class, 'products'])->name('products');
+        Route::get('/my-orders', [DashboardController::class, 'myOrders'])->name('my-orders');
+        Route::get('/my-invoices', [DashboardController::class, 'myInvoices'])->name('my-invoices');
         Route::get('/search', [DashboardController::class, 'search'])->name('search');
     });
 

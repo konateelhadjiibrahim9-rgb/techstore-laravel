@@ -8,22 +8,29 @@ class Quote extends Model
 {
     protected $fillable = [
         'user_id',
-        'company_name',
-        'contact_name',
-        'email',
-        'phone',
-        'message',
+        'product_category_id',
         'status',
-        'admin_notes',
-        'estimated_amount',
+        'reference',
+        'data',
+        'documents',
+        'processed_at',
+        'completed_at',
     ];
 
     protected $casts = [
-        'estimated_amount' => 'decimal:2',
+        'data' => 'array',
+        'documents' => 'array',
+        'processed_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function productCategory()
+    {
+        return $this->belongsTo(ProductCategory::class);
     }
 }

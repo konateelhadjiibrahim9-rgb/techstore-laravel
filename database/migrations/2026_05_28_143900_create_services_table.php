@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description');
             $table->string('category');
-            $table->enum('profile', ['citizen', 'enterprise'])->default('citizen');
+            $table->enum('profile', ['individual', 'enterprise'])->default('individual');
             $table->string('icon')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('processing_time')->nullable(); // en jours
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('product_categories');
     }
 };
