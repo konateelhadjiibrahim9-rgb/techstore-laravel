@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -15,11 +17,48 @@ class AdminController extends Controller
         return view('dashboard.admins', ['users' => $users]);
     }
 
+    public function store(Request $request)
+    {
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'role' => 'required|in:admin,super_admin',
+            'password' => 'sometimes|required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.admins.index')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Génération du mot de passe
+        $password = $request->auto_generate_password 
+            ? Str::random(12) 
+            : $request->password;
+
+        // Création de l'utilisateur
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($password),
+            'role' => $request->role,
+        ]);
+
+        // Message de succès avec le mot de passe généré
+        $message = $request->auto_generate_password
+            ? "Administrateur créé avec succès. Mot de passe généré : {$password}"
+            : "Administrateur créé avec succès.";
+
+        return redirect()->route('admin.admins.index')
+            ->with('success', $message);
+    }
+
     public function updateRole(Request $request, $userId)
     {
         // Validation des données
         $validator = Validator::make($request->all(), [
-            'email' => 'sometimes|required|email|exists:users,email',
             'role' => 'required|in:user,admin,super_admin',
         ]);
 
@@ -29,28 +68,12 @@ class AdminController extends Controller
                 ->withInput();
         }
 
-        // Si c'est un nouvel administrateur (email fourni)
-        if ($request->has('email')) {
-            $user = User::where('email', $request->email)->first();
-            
-            if (!$user) {
-                return redirect()->route('admin.admins.index')
-                    ->with('error', 'Utilisateur non trouvé avec cet email.');
-            }
-
-            // Vérifier que l'utilisateur n'est pas déjà admin
-            if ($user->role !== 'user') {
-                return redirect()->route('admin.admins.index')
-                    ->with('error', 'Cet utilisateur a déjà un rôle d\'administrateur.');
-            }
-        } else {
-            // Modification d'un utilisateur existant
-            $user = User::find($userId);
-            
-            if (!$user) {
-                return redirect()->route('admin.admins.index')
-                    ->with('error', 'Utilisateur non trouvé.');
-            }
+        // Modification d'un utilisateur existant
+        $user = User::find($userId);
+        
+        if (!$user) {
+            return redirect()->route('admin.admins.index')
+                ->with('error', 'Utilisateur non trouvé.');
         }
 
         // Vérifier que l'utilisateur ne se modifie pas lui-même

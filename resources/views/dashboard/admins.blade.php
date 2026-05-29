@@ -26,14 +26,28 @@
         </div>
     @endif
 
-    <!-- Formulaire d'ajout -->
+    <!-- Formulaire de création -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 mb-8">
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Ajouter un administrateur</h3>
-        <form action="{{ route('admin.admins.update.role', ['user' => 'new']) }}" method="POST" id="addAdminForm" class="space-y-4">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Créer un administrateur</h3>
+        <form action="{{ route('admin.admins.store') }}" method="POST" id="addAdminForm" class="space-y-4">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email de l'utilisateur</label>
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom de l'utilisateur</label>
+                    <input 
+                        type="text" 
+                        id="name"
+                        name="name" 
+                        placeholder="Jean Dupont" 
+                        class="w-full px-4 py-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                        required
+                    >
+                    @if($errors->has('name'))
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $errors->first('name') }}</p>
+                    @endif
+                </div>
+                <div>
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                     <input 
                         type="email" 
                         id="email"
@@ -46,6 +60,9 @@
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $errors->first('email') }}</p>
                     @endif
                 </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rôle</label>
                     <select 
@@ -57,7 +74,32 @@
                         <option value="super_admin">Super Admin</option>
                     </select>
                 </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
+                    <div class="flex items-center mb-2">
+                        <input 
+                            type="checkbox" 
+                            id="autoGeneratePassword"
+                            name="auto_generate_password" 
+                            value="1"
+                            class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            checked
+                        >
+                        <label for="autoGeneratePassword" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Générer automatiquement</label>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="password"
+                        name="password" 
+                        placeholder="Mot de passe (si génération manuelle)" 
+                        class="w-full px-4 py-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white hidden"
+                    >
+                    @if($errors->has('password'))
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $errors->first('password') }}</p>
+                    @endif
+                </div>
             </div>
+            
             <div class="flex justify-end">
                 <button 
                     type="submit" 
@@ -68,7 +110,7 @@
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span id="btnText">Ajouter</span>
+                    <span id="btnText">Créer</span>
                 </button>
             </div>
         </form>
@@ -155,6 +197,21 @@
         const submitBtn = document.getElementById('submitBtn');
         const spinner = document.getElementById('spinner');
         const btnText = document.getElementById('btnText');
+        const autoGeneratePassword = document.getElementById('autoGeneratePassword');
+        const passwordField = document.getElementById('password');
+
+        // Toggle password field visibility based on checkbox
+        if (autoGeneratePassword && passwordField) {
+            autoGeneratePassword.addEventListener('change', function() {
+                if (this.checked) {
+                    passwordField.classList.add('hidden');
+                    passwordField.removeAttribute('required');
+                } else {
+                    passwordField.classList.remove('hidden');
+                    passwordField.setAttribute('required', 'required');
+                }
+            });
+        }
 
         if (form && submitBtn) {
             form.addEventListener('submit', function() {

@@ -35,7 +35,7 @@ Route::prefix('admin')
         Route::get('/quotes', QuoteList::class)->name('quotes.index');
 
         Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
-        
+        Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');
         Route::post('/admins/{user}/role', [AdminController::class, 'updateRole'])->name('admins.update.role');
     });
 
