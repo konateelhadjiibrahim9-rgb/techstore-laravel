@@ -38,50 +38,75 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.product_variant_id' => 'required|exists:product_variants,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'delivery_address' => 'required|array',
-            'delivery_address.address' => 'required|string',
-            'delivery_address.city' => 'required|string',
-            'delivery_address.country' => 'required|string',
-            'delivery_address.phone' => 'required|string',
+            'shipping_address' => 'required|string',
+            'shipping_city' => 'required|string',
+            'shipping_phone' => 'required|string',
+            'payment_method' => 'required|string',
         ]);
 
-        $totalAmount = 0;
-        foreach ($validated['items'] as $item) {
-            $product = Product::findOrFail($item['product_id']);
-            $totalAmount += $product->price * $item['quantity'];
-        }
+        return \DB::transaction(function () use ($validated) {
+            $totalAmount = 0;
+            $orderItems = [];
 
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'reference' => 'ORD-' . date('Y') . '-' . str_pad(Order::count() + 1, 3, '0', STR_PAD_LEFT),
-            'total_amount' => $totalAmount,
-            'delivery_address' => $validated['delivery_address']['address'],
-            'city' => $validated['delivery_address']['city'],
-            'country' => $validated['delivery_address']['country'],
-            'phone' => $validated['delivery_address']['phone'],
-            'delivery_fee' => 15000,
-            'status' => 'pending',
-        ]);
+            foreach ($validated['items'] as $item) {
+                $variant = \App\Models\ProductVariant::with('product')->findOrFail($item['product_variant_id']);
+                
+                // Check stock availability
+                if ($variant->stock_quantity < $item['quantity']) {
+                    return response()->json([
+                        'error' => 'Stock insuffisant pour la variante: ' . $variant->name,
+                        'available' => $variant->stock_quantity,
+                        'requested' => $item['quantity'],
+                    ], 422);
+                }
 
-        foreach ($validated['items'] as $item) {
-            $product = Product::findOrFail($item['product_id']);
+                $itemTotal = $variant->price * $item['quantity'];
+                $totalAmount += $itemTotal;
 
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item['product_id'],
-                'quantity' => $item['quantity'],
-                'unit_price' => $product->price,
-                'subtotal' => $product->price * $item['quantity'],
+                $orderItems[] = [
+                    'product_id' => $variant->product_id,
+                    'product_variant_id' => $variant->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $variant->price,
+                    'subtotal' => $itemTotal,
+                ];
+
+                // Decrement stock
+                $variant->stock_quantity -= $item['quantity'];
+                $variant->save();
+            }
+
+            $order = Order::create([
+                'user_id' => auth()->id(),
+                'order_number' => Order::generateOrderNumber(),
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
+                'shipping_address' => $validated['shipping_address'],
+                'shipping_city' => $validated['shipping_city'],
+                'shipping_phone' => $validated['shipping_phone'],
+                'payment_method' => $validated['payment_method'],
             ]);
 
-            // Update stock
-            $product->stock_quantity -= $item['quantity'];
-            $product->save();
-        }
+            foreach ($orderItems as $item) {
+                $item['order_id'] = $order->id;
+                OrderItem::create($item);
+            }
 
-        return new OrderResource($order->load('items.product'));
+            return response()->json([
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'user_id' => $order->user_id,
+                'total_amount' => (float) $order->total_amount,
+                'status' => $order->status,
+                'shipping_address' => $order->shipping_address,
+                'shipping_city' => $order->shipping_city,
+                'shipping_phone' => $order->shipping_phone,
+                'payment_method' => $order->payment_method,
+                'items' => $order->orderItems,
+            ]);
+        });
     }
 
     public function updateStatus(Request $request, $id)

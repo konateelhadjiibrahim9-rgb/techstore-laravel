@@ -15,20 +15,19 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'reference' => $this->reference,
-            'total_amount' => (int) $this->total_amount,
-            'status' => $this->status,
-            'delivery_fee' => (int) $this->delivery_fee,
-            'delivery_address' => [
-                'address' => $this->delivery_address,
-                'city' => $this->city,
-                'country' => $this->country,
-                'phone' => $this->phone,
-            ],
-            'items' => OrderItemResource::collection($this->items),
-            'created_at' => $this->created_at->toISOString(),
-            'updated_at' => $this->updated_at->toISOString(),
+            'id' => $this->resource->id,
+            'order_number' => $this->resource->order_number,
+            'user_id' => $this->resource->user_id,
+            'total_amount' => (float) $this->resource->total_amount,
+            'status' => $this->resource->status,
+            'shipping_address' => $this->resource->shipping_address,
+            'shipping_city' => $this->resource->shipping_city,
+            'shipping_phone' => $this->resource->shipping_phone,
+            'payment_method' => $this->resource->payment_method,
+            'notes' => $this->resource->notes,
+            'items' => OrderItemResource::collection($this->whenLoaded('orderItems')),
+            'created_at' => $this->resource->created_at->toISOString(),
+            'updated_at' => $this->resource->updated_at->toISOString(),
         ];
     }
 }

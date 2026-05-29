@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminStatsController;
+use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Api\OrderController;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
@@ -43,5 +46,33 @@ Route::prefix('admin/admins')
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::post('/', [AdminController::class, 'store'])->name('store');
         Route::post('/{user}/role', [AdminController::class, 'updateRole'])->name('update.role');
+    });
+
+// Customer Dashboard - Accessible par tous les utilisateurs authentifiés
+Route::prefix('customer')
+    ->middleware(['auth'])
+    ->name('customer.')
+    ->group(function () {
+        Route::get('/', [CustomerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/orders', [CustomerController::class, 'orders'])->name('orders');
+        Route::get('/profile', [CustomerController::class, 'profile'])->name('profile');
+        Route::post('/profile', [CustomerController::class, 'updateProfile'])->name('profile.update');
+    });
+
+// API Routes - Pour frontend Django
+Route::prefix('api')
+    ->middleware(['auth:sanctum'])
+    ->name('api.')
+    ->group(function () {
+        Route::prefix('customer')->group(function () {
+            Route::get('/orders', [CustomerController::class, 'orders'])->name('customer.orders');
+            Route::get('/profile', [CustomerController::class, 'profile'])->name('customer.profile');
+            Route::post('/profile/update', [CustomerController::class, 'updateProfile'])->name('customer.profile.update');
+            Route::post('/orders', [OrderController::class, 'store'])->name('customer.orders.store');
+        });
+
+        Route::prefix('admin')->middleware(['is.super.admin'])->group(function () {
+            Route::get('/stats', [AdminStatsController::class, 'index'])->name('admin.stats');
+        });
     });
 
