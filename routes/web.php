@@ -12,7 +12,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Admin Dashboard - Protected for admins only
+// Admin Dashboard - Accessible par tous les admins (Admin et SuperAdmin)
 Route::prefix('admin')
     ->middleware(['auth', 'is.super.admin'])
     ->name('admin.')
@@ -30,10 +30,16 @@ Route::prefix('admin')
         })->name('deliveries.index');
 
         Route::get('/quotes', QuoteList::class)->name('quotes.index');
+    });
 
-        Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
-        Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');
-        Route::post('/admins/{user}/role', [AdminController::class, 'updateRole'])->name('admins.update.role');
+// Gestion des Administrateurs - Accessible uniquement par Super Admin
+Route::prefix('admin/admins')
+    ->middleware(['auth', 'is.super.admin'])
+    ->name('admin.admins.')
+    ->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::post('/', [AdminController::class, 'store'])->name('store');
+        Route::post('/{user}/role', [AdminController::class, 'updateRole'])->name('update.role');
     });
 
 require __DIR__.'/auth.php';

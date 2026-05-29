@@ -15,15 +15,13 @@ class IsSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Si l'utilisateur n'est pas connecté, envoie-le au login sans passer par la logique admin
         if (!auth()->check()) {
             return redirect()->route('login');
         }
 
-        // Si ce n'est pas un super admin, déconnecte-le et envoie-le au login
-        if (!auth()->user()->isSuperAdmin()) {
-            auth()->logout();
-            return redirect()->route('login')->with('error', 'Accès réservé aux Super Admins.');
+        // Autorise Admin ET SuperAdmin
+        if (!auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin()) {
+            return redirect()->route('login')->with('error', 'Accès non autorisé.');
         }
 
         return $next($request);
