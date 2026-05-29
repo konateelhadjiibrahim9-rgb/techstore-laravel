@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
@@ -18,9 +19,7 @@ Route::prefix('admin')
     ->middleware(['auth', 'is.super.admin'])
     ->name('admin.')
     ->group(function () {
-        Route::get('/', function () {
-            return redirect()->route('admin.products.index');
-        })->name('dashboard');
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
