@@ -15,23 +15,17 @@ class IsSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        \Log::info('IsSuperAdmin middleware check', [
-            'authenticated' => auth()->check(),
-            'is_super_admin' => auth()->check() ? auth()->user()->isSuperAdmin() : false,
-            'route' => $request->route() ? $request->route()->getName() : 'unknown'
-        ]);
-
+        // Si l'utilisateur n'est pas connecté, envoie-le au login sans passer par la logique admin
         if (!auth()->check()) {
-            \Log::info('Redirecting to login: not authenticated');
-            return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
+            return redirect()->route('login');
         }
 
+        // Si ce n'est pas un super admin, déconnecte-le et envoie-le au login
         if (!auth()->user()->isSuperAdmin()) {
-            \Log::info('Redirecting to login: not super admin');
-            return redirect()->route('login')->with('error', 'Accès refusé. Cette fonctionnalité est réservée aux super administrateurs.');
+            auth()->logout();
+            return redirect()->route('login')->with('error', 'Accès réservé aux Super Admins.');
         }
 
-        \Log::info('IsSuperAdmin middleware passed');
         return $next($request);
     }
 }

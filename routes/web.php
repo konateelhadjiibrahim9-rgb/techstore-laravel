@@ -9,9 +9,6 @@ use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\QuoteList;
 
 Route::get('/', function () {
-    if (auth()->check() && auth()->user()->isSuperAdmin()) {
-        return redirect()->route('admin.products.index');
-    }
     return redirect()->route('login');
 });
 
