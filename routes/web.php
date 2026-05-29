@@ -1,32 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
 use App\Livewire\Admin\QuoteList;
 
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('dashboard.index');
+    if (auth()->check() && auth()->user()->isSuperAdmin()) {
+        return redirect()->route('admin.products.index');
     }
     return redirect()->route('login');
 });
-
-// Portail de Produits - Dashboard principal
-Route::prefix('dashboard')
-    ->middleware(['auth'])
-    ->name('dashboard.')
-    ->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])->name('index');
-        Route::get('/products', [DashboardController::class, 'products'])->name('products');
-        Route::get('/my-orders', [DashboardController::class, 'myOrders'])->name('my-orders');
-        Route::get('/my-invoices', [DashboardController::class, 'myInvoices'])->name('my-invoices');
-        Route::get('/quote/create', [DashboardController::class, 'createQuote'])->name('quote.create');
-        Route::post('/quote', [DashboardController::class, 'storeQuote'])->name('quote.store');
-        Route::get('/search', [DashboardController::class, 'search'])->name('search');
-    });
 
 // Admin Dashboard - Protected for admins only
 Route::prefix('admin')
@@ -61,3 +46,4 @@ Route::prefix('admin')
     });
 
 require __DIR__.'/auth.php';
+
