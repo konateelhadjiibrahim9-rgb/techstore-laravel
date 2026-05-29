@@ -2,15 +2,7 @@
 
 @section('content')
 <div class="p-4 md:p-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Gestion des Administrateurs</h1>
-        <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Retour au tableau de bord
-        </a>
-    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Gestion des Administrateurs</h1>
 
     @if(session()->has('success'))
         <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-400 rounded-lg shadow-sm">

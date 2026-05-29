@@ -6,10 +6,7 @@
     @endif
 
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">{{ $isEdit ? 'Modifier le Produit' : 'Nouveau Produit' }}</h1>
-        <a href="{{ route('admin.products.index') }}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">
-            ← Retour à la liste
-        </a>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $isEdit ? 'Modifier le Produit' : 'Nouveau Produit' }}</h1>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
