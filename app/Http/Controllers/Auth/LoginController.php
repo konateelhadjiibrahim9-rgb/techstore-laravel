@@ -27,10 +27,13 @@ class LoginController extends Controller
             
             \Log::info('Login successful', [
                 'email' => $request->email,
+                'role' => Auth::user()->role,
+                'is_admin' => Auth::user()->isAdmin(),
                 'is_super_admin' => Auth::user()->isSuperAdmin()
             ]);
             
-            if (Auth::user()->isSuperAdmin()) {
+            // Rediriger tous les admins (admin et super_admin) vers le dashboard admin
+            if (Auth::user()->isAdmin()) {
                 \Log::info('Redirecting to admin.dashboard');
                 return redirect()->route('admin.dashboard');
             }
