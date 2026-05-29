@@ -20,8 +20,7 @@ class IsSuperAdmin
         }
 
         if (!auth()->user()->isSuperAdmin()) {
-            auth()->logout();
-            return redirect()->route('login')->with('error', 'Accès réservé aux administrateurs. Vous avez été déconnecté.');
+            return redirect()->route('admin.dashboard')->with('error', 'Accès refusé. Cette fonctionnalité est réservée aux super administrateurs.');
         }
 
         return $next($request);
