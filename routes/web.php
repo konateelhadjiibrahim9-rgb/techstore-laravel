@@ -12,6 +12,9 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Login routes (NOT protected by admin middleware)
+require __DIR__.'/auth.php';
+
 // Admin Dashboard - Accessible par tous les admins (Admin et SuperAdmin)
 Route::prefix('admin')
     ->middleware(['auth', 'is.super.admin'])
@@ -41,6 +44,4 @@ Route::prefix('admin/admins')
         Route::post('/', [AdminController::class, 'store'])->name('store');
         Route::post('/{user}/role', [AdminController::class, 'updateRole'])->name('update.role');
     });
-
-require __DIR__.'/auth.php';
 
