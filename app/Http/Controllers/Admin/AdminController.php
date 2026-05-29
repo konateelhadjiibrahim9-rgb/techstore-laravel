@@ -24,7 +24,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'role' => 'required|in:admin,super_admin',
-            'password' => 'sometimes|required|string|min:8',
+            'password' => 'required_without:auto_generate_password|string|min:8',
         ]);
 
         if ($validator->fails()) {
