@@ -19,6 +19,9 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
+        // Debug logging
+        \Log::info('Admin creation request data:', $request->all());
+
         // Validation des données
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
