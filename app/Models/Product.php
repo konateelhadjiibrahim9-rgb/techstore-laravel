@@ -24,4 +24,19 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('order');
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_primary', true);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }
