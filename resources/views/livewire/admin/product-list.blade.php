@@ -1,4 +1,4 @@
-<div>
+<div class="p-4 md:p-8">
     @if(session()->has('message'))
         <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-400 rounded-lg shadow-sm">
             <div class="flex items-center">
