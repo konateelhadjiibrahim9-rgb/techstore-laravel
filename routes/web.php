@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Livewire\Admin\ProductList;
 use App\Livewire\Admin\ProductForm;
 use App\Livewire\Admin\OrderList;
@@ -33,19 +34,9 @@ Route::prefix('admin')
 
         Route::get('/quotes', QuoteList::class)->name('quotes.index');
 
-        Route::get('/admins', function () {
-            $users = \App\Models\User::where('role', '!=', 'user')->get();
-            return view('dashboard.admins', ['users' => $users]);
-        })->name('admins.index');
+        Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
         
-        Route::post('/admins/{user}/role', function (\Illuminate\Http\Request $request, $userId) {
-            $user = \App\Models\User::find($userId);
-            if ($user && $user->id !== auth()->id()) {
-                $user->role = $request->role;
-                $user->save();
-            }
-            return redirect()->route('admin.admins.index');
-        })->name('admins.update.role');
+        Route::post('/admins/{user}/role', [AdminController::class, 'updateRole'])->name('admins.update.role');
     });
 
 require __DIR__.'/auth.php';
