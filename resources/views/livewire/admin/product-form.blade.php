@@ -7,7 +7,7 @@
 
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">{{ $isEdit ? 'Modifier le Produit' : 'Nouveau Produit' }}</h1>
-        <a href="{{ route('dashboard.products.index') }}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">
+        <a href="{{ route('admin.products.index') }}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">
             ← Retour à la liste
         </a>
     </div>
@@ -117,7 +117,7 @@
             </div>
 
             <div class="mt-6 flex justify-end space-x-4">
-                <a href="{{ route('dashboard.products.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                <a href="{{ route('admin.products.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
                     Annuler
                 </a>
                 <button 

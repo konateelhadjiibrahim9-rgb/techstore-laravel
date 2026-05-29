@@ -87,7 +87,7 @@ class ProductForm extends Component
             session()->flash('message', 'Produit créé avec succès.');
         }
 
-        return redirect()->route('dashboard.products.index');
+        return redirect()->route('admin.products.index');
     }
 
     public function render()
