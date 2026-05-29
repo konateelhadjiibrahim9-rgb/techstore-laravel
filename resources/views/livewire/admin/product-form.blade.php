@@ -91,7 +91,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Image du produit</label>
                     @if($image_path)
                         <div class="mb-3">
-                            <img src="{{ asset($image_path) }}" alt="Image actuelle" class="h-32 w-32 object-cover rounded">
+                            <img src="{{ asset('storage/' . $image_path) }}" alt="Image actuelle" class="h-32 w-32 object-cover rounded">
                         </div>
                     @endif
                     <input 
