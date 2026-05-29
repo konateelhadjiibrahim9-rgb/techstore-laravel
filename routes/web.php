@@ -18,6 +18,10 @@ Route::prefix('admin')
     ->middleware(['auth', 'is.super.admin'])
     ->name('admin.')
     ->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('admin.products.index');
+        })->name('dashboard');
+        
         Route::get('/products', ProductList::class)->name('products.index');
         Route::get('/products/create', ProductForm::class)->name('products.create');
         Route::get('/products/{product}/edit', ProductForm::class)->name('products.edit');

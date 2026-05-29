@@ -24,7 +24,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             
             if (Auth::user()->isSuperAdmin()) {
-                return redirect()->route('admin.products.index');
+                return redirect()->route('admin.dashboard');
             }
             
             return redirect()->intended('/');
